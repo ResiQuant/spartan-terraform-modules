@@ -28,16 +28,11 @@ resource "aws_eks_addon" "kube_proxy" {
   depends_on = [aws_eks_cluster.master]
 }
 
-data "aws_eks_addon_version" "coredns_latest" {
-  addon_name         = "coredns"
-  kubernetes_version = aws_eks_cluster.master.version
-}
-
 resource "aws_eks_addon" "coredns_ec2" {
   count = var.k8s_core_dns_compute_type == "ec2" ? 1 : 0
 
   addon_name                  = "coredns"
-  addon_version               = data.aws_eks_addon_version.coredns_latest.version
+  addon_version               = "v1.11.1-eksbuild.8"
   cluster_name                = local.cluster_name
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
@@ -49,7 +44,7 @@ resource "aws_eks_addon" "coredns_fargate" {
   count = var.k8s_core_dns_compute_type == "fargate" ? 1 : 0
 
   addon_name                  = "coredns"
-  addon_version               = data.aws_eks_addon_version.coredns_latest.version
+  addon_version               = "v1.11.1-eksbuild.8"
   cluster_name                = local.cluster_name
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
