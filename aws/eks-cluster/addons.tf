@@ -37,6 +37,8 @@ resource "aws_eks_addon" "coredns_ec2" {
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
 
+  configuration_values = var.coredns_replica_count != null ? jsonencode({ replicaCount = var.coredns_replica_count }) : null
+
   depends_on = [aws_eks_cluster.master]
 }
 
@@ -49,9 +51,10 @@ resource "aws_eks_addon" "coredns_fargate" {
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
 
-  configuration_values = jsonencode({
-    computeType = "fargate"
-  })
+  configuration_values = jsonencode(merge(
+    { computeType = "fargate" },
+    var.coredns_replica_count != null ? { replicaCount = var.coredns_replica_count } : {}
+  ))
 
   depends_on = [aws_eks_cluster.master, module.fargate_profile]
 }

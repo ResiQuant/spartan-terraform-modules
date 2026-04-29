@@ -50,6 +50,12 @@ variable "k8s_core_dns_compute_type" {
   default     = "ec2"
 }
 
+variable "coredns_replica_count" {
+  type        = number
+  description = "Replica count to set in EKS CoreDNS addon configuration."
+  default     = null
+}
+
 variable "aws_auth_users" {
   type        = list(any)
   description = "AWS users for authenticating with Kubernetes"
