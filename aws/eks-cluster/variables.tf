@@ -193,3 +193,24 @@ variable "custom_namespaces" {
   description = "Custom namespaces to be created during initialization"
   default     = []
 }
+
+variable "vpc_cni_addon_version" {
+  type        = string
+  description = "If set, pin vpc-cni add-on to this version. If null, use latest compatible version from the aws_eks_addon_version data source."
+  default     = null
+  nullable    = true
+}
+
+variable "kube_proxy_addon_version" {
+  type        = string
+  description = "If set, pin kube-proxy add-on to this version. If null, use latest compatible version from the aws_eks_addon_version data source."
+  default     = null
+  nullable    = true
+}
+
+variable "coredns_addon_version" {
+  type        = string
+  description = "If set, pin coredns add-on to this version. If null, use v1.11.1-eksbuild.8."
+  default     = null
+  nullable    = true
+}

@@ -6,7 +6,7 @@ data "aws_eks_addon_version" "vpc_cni_latest" {
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name                = local.cluster_name
   addon_name                  = "vpc-cni"
-  addon_version               = data.aws_eks_addon_version.vpc_cni_latest.version
+  addon_version               = coalesce(var.vpc_cni_addon_version, data.aws_eks_addon_version.vpc_cni_latest.version)
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
 
@@ -21,7 +21,7 @@ data "aws_eks_addon_version" "kube_proxy_latest" {
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name                = local.cluster_name
   addon_name                  = "kube-proxy"
-  addon_version               = data.aws_eks_addon_version.kube_proxy_latest.version
+  addon_version               = coalesce(var.kube_proxy_addon_version, data.aws_eks_addon_version.kube_proxy_latest.version)
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
 
@@ -32,7 +32,7 @@ resource "aws_eks_addon" "coredns_ec2" {
   count = var.k8s_core_dns_compute_type == "ec2" ? 1 : 0
 
   addon_name                  = "coredns"
-  addon_version               = "v1.11.1-eksbuild.8"
+  addon_version               = coalesce(var.coredns_addon_version, "v1.11.1-eksbuild.8")
   cluster_name                = local.cluster_name
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
@@ -46,7 +46,7 @@ resource "aws_eks_addon" "coredns_fargate" {
   count = var.k8s_core_dns_compute_type == "fargate" ? 1 : 0
 
   addon_name                  = "coredns"
-  addon_version               = "v1.11.1-eksbuild.8"
+  addon_version               = coalesce(var.coredns_addon_version, "v1.11.1-eksbuild.8")
   cluster_name                = local.cluster_name
   resolve_conflicts_on_update = "OVERWRITE"
   resolve_conflicts_on_create = "OVERWRITE"
